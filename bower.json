@@ -1,0 +1,16 @@
+{
+  "name": "simple-diagram",
+  "version": "0.0.0",
+  "homepage": "https://github.com/ChangeVision-Biz-Dev/secret-octo-wallhack/tree/SimpleDiagram",
+  "authors": [
+    "change-vision inc."
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
