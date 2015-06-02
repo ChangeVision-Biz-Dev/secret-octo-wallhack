@@ -1,5 +1,5 @@
 # SimpleDiagram
-Cacooみたいな（モデル無視で）Class図っぽいものがかけると良いな。
+Cacooみたいな（モデル無視で）Class図っぽいものがかけると良いな。  
 JavascriptのCanvasを利用してお絵かきDiagramを作る。  
 まずは○、△、□が描けること。  
 
@@ -27,5 +27,5 @@ MVCかMVVMか？
 * UTなに使う？Jasmine？Mocha？
 * パッケージ管理はnpm+bowerで。
 * タスク実行はGruntではなくgulp使おうか。
-* リポジトリ共有なのでissue管理はどうしよう？
+* リポジトリ共有なのでissue管理はどうしよう？ → <span style="color:red;">一旦Issuesを使う。ただし、ブランチ名のタグを作って使う。</span>
 * チャットはいらないよね。
