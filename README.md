@@ -1,6 +1,8 @@
 # SimpleDiagram
+Cacooみたいな（モデル無視で）Class図っぽいものがかけると良いな。
 JavascriptのCanvasを利用してお絵かきDiagramを作る。  
-まずは○、△、□が描けること。
+まずは○、△、□が描けること。  
+
 
 ## 技術
 Canvas、イベントがらみは（お勉強もかねて）Javascriptをそのまま使うことを前提とする。  
