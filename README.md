@@ -27,5 +27,5 @@ MVCかMVVMか？
 * UTなに使う？Jasmine？Mocha？
 * パッケージ管理はnpm+bowerで。
 * タスク実行はGruntではなくgulp使おうか。
-* リポジトリ共有なのでissue管理はどうしよう？ → <span style="color:red;">一旦Issuesを使う。ただし、ブランチ名のタグを作って使う。</span>
+* リポジトリ共有なのでissue管理はどうしよう？ → **一旦Issuesを使う。ただし、ブランチ名のタグを作って使う。**
 * チャットはいらないよね。
