@@ -13,6 +13,8 @@ MVCかMVVMか？
 * MVVM  
  * 自力でのMVVMはつらいかも。
 
+→ **MVCで。理由はJavaFXのクラス群を参考にすることにより、JavaFXの勉強にもなる。**
+
 ## マイルストーン
 何か動くものができたらいいね。
 * Rect、Circle、Line、Path等。
