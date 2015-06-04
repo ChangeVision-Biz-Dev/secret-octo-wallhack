@@ -6,10 +6,10 @@ JavascriptのCanvasを利用してお絵かきDiagramを作る。
 
 ## 技術
 Canvas、イベントがらみは（お勉強もかねて）Javascriptをそのまま使うことを前提とする。  
-ただし、デファクトスタンダードなライブラリがあればは使う（[momentjs](http://momentjs.com)等）。
+ただし、デファクトスタンダードなライブラリがあれば使う（[momentjs](http://momentjs.com)等）。
 
 ## モジュール化
-[require.js](http://requirejs.org)を使ってモジュール化する。できれば、webもnodeでも使えるとよい。  
+[require.js](http://requirejs.org)を使ってモジュール化する。できれば、webでもnodeでも使えるとよい。  
 [RequireJS使い方メモ](http://qiita.com/opengl-8080/items/196213867b859daea719)  
 
 ## 設計
