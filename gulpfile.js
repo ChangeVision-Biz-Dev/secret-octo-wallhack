@@ -30,7 +30,7 @@ gulp.task('concat', ['clean'], function () {
 gulp.task('js', ['concat'], function () {
     return gulp.src([TEMP_DIR + '/js/sample-diagram.js'])
         .pipe(plumber())
-        .pipe(uglify())
+//        .pipe(uglify())
         .pipe(rename('sample-diagram.min.js'))
         .pipe(gulp.dest(TEMP_DIR + 'js'))
         ;
@@ -63,5 +63,5 @@ gulp.task('server', ['copy-js'], function () {
 // defaultのタスク。
 gulp.task('default', ['server'], function () {
     // ファイル監視
-    gulp.watch([SRC_DIR + 'js/**/*.js', SRC_DIR + '**/*.html'], ['copy']);
+    gulp.watch([SRC_DIR + 'js/**/*.js', SRC_DIR + '**/*.html'], ['copy-js']);
 });
