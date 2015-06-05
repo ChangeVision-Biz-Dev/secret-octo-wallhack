@@ -50,22 +50,58 @@
     }
 
     function render() {
+        ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+        ctx.fillStyle = 'black';
+
         ctx.beginPath();
         ctx.arc(canvasX(0), canvasY(0), 2, 0, Math.PI * 2, true);
         ctx.fill();
 
         var now = new Date();
-        var degree = canvasDegree((360 / 60) * now.getSeconds());
-        var r = 80;
-        var x = Math.cos(convertRadian(degree)) * r;
-        var y = Math.sin(convertRadian(degree)) * r;
-        //console.log('x:' + x + ', y:' + y);
-        ctx.fillStyle = 'black';
-        ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-        ctx.beginPath();
-        ctx.moveTo(canvasX(0), canvasY(0));
-        ctx.lineTo(canvasX(x), canvasY(y));
-        ctx.stroke();
+
+        var methods = {
+            pointX: function (degree, r) {
+              return Math.cos(convertRadian(degree)) * r;
+            },
+            pointY: function (degree, r) {
+              return Math.sin(convertRadian(degree)) * r;
+            },
+            drawLine: function (x, y) {
+              ctx.beginPath();
+              ctx.moveTo(canvasX(0), canvasY(0));
+              ctx.lineTo(canvasX(x), canvasY(y));
+              ctx.stroke();
+            },
+            degreeOfHours: function(d) {
+              return canvasDegree((360 / 60)
+                * (d.getHours() % 12 * 5 + d.getMinutes() * 5 / 60 ));
+            },
+            degreeOfMinutes: function(d) {
+              return canvasDegree((360 / 60) * d.getMinutes());
+            },
+            degreeOfSeconds: function(d) {
+              return canvasDegree((360 / 60) * d.getSeconds());
+            },
+        };
+
+        with (methods) {
+          var degree = degreeOfHours(now);
+          var r = 50;
+          drawLine(pointX(degree, r), pointY(degree, r));
+        }
+
+        with (methods) {
+          var degree = degreeOfMinutes(now);
+          var r = 70;
+          drawLine(pointX(degree, r), pointY(degree, r));
+        }
+
+        with (methods) {
+          var degree = degreeOfSeconds(now);
+          var r = 80;
+          drawLine(pointX(degree, r), pointY(degree, r));
+        }
+
         requestAnimationFrame(render);
     }
 
