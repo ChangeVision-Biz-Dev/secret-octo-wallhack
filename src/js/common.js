@@ -59,47 +59,54 @@
 
         var now = new Date();
 
+        // ミリも含む秒
+        var second = now.getSeconds() + now.getMilliseconds() / 1000;
+        // 角速度
+        var radPerS = 2 * Math.PI / 60;
+        var radius = second * radPerS;
+        //var sinTheta = Math.sin(radius);
+
         var methods = {
             pointX: function (degree, r) {
-              return Math.cos(convertRadian(degree)) * r;
+                return Math.cos(convertRadian(degree)) * r;
             },
             pointY: function (degree, r) {
-              return Math.sin(convertRadian(degree)) * r;
+                return Math.sin(convertRadian(degree)) * r;
             },
             drawLine: function (x, y) {
-              ctx.beginPath();
-              ctx.moveTo(canvasX(0), canvasY(0));
-              ctx.lineTo(canvasX(x), canvasY(y));
-              ctx.stroke();
+                ctx.beginPath();
+                ctx.moveTo(canvasX(0), canvasY(0));
+                ctx.lineTo(canvasX(x), canvasY(y));
+                ctx.stroke();
             },
-            degreeOfHours: function(d) {
-              return canvasDegree((360 / 60)
-                * (d.getHours() % 12 * 5 + d.getMinutes() * 5 / 60 ));
+            degreeOfHours: function (d) {
+                return canvasDegree((360 / 60)
+                    * (d.getHours() % 12 * 5 + d.getMinutes() * 5 / 60 ));
             },
-            degreeOfMinutes: function(d) {
-              return canvasDegree((360 / 60) * d.getMinutes());
+            degreeOfMinutes: function (d) {
+                return canvasDegree((360 / 60) * d.getMinutes());
             },
-            degreeOfSeconds: function(d) {
-              return canvasDegree((360 / 60) * d.getSeconds());
+            degreeOfSeconds: function (d) {
+                return canvasDegree((360 / 60) * d.getSeconds());
             },
         };
 
         with (methods) {
-          var degree = degreeOfHours(now);
-          var r = 50;
-          drawLine(pointX(degree, r), pointY(degree, r));
+            var degree = degreeOfHours(now);
+            var r = 50;
+            drawLine(pointX(degree, r), pointY(degree, r));
         }
 
         with (methods) {
-          var degree = degreeOfMinutes(now);
-          var r = 70;
-          drawLine(pointX(degree, r), pointY(degree, r));
+            var degree = degreeOfMinutes(now);
+            var r = 70;
+            drawLine(pointX(degree, r), pointY(degree, r));
         }
 
         with (methods) {
-          var degree = degreeOfSeconds(now);
-          var r = 80;
-          drawLine(pointX(degree, r), pointY(degree, r));
+            //var degree = degreeOfSeconds(now);
+            var r = 80;
+            drawLine(Math.cos(radius) * r, Math.sin(radius) * r);
         }
 
         requestAnimationFrame(render);
