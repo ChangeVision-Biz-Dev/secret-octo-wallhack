@@ -35,25 +35,18 @@ Observable.prototype.addListener = function (listener) {
  * リスナーの削除。
  * @param listener
  */
-Observable.prototype.removeObserver = function (listener) {
-    var len = this.listeners.length;
-    for (var i = 0; i < len; ++i) {
-        if (this.listeners[i] === listener.update) {
-            this.listeners.splice(i, 1);
-            return;
-        }
-    }
+Observable.prototype.removeListener = function (listener) {
+    var self = this;
+    this.listeners.some(function (item, i) {
+       item === listener.change && self.listeners.splice(i, 1);
+    });
 };
 /**
  * 通知する。
  * @param data
  */
 Observable.prototype.notify = function (data) {
-    var len = this.listeners.length;
-    // foreachあったら楽だが。。
-    for (var i = 0; i < len; ++i) {
-        this.listeners[i](data);
-    }
+    this.listeners.forEach(function (listener) { listener(data); });
 };
 
 // ----
@@ -74,4 +67,7 @@ human.change = function (event) {
 
 var shiba = new Dog();
 shiba.addListener(human);
+shiba.bark();
+
+shiba.removeListener(human);
 shiba.bark();
