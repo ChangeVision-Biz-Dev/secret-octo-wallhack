@@ -36,9 +36,8 @@ Observable.prototype.addListener = function (listener) {
  * @param listener
  */
 Observable.prototype.removeListener = function (listener) {
-    var self = this;
-    this.listeners.some(function (item, i) {
-       item === listener.change && self.listeners.splice(i, 1);
+    this.listeners = this.listeners.filter(function (item) {
+       return item !== listener.change;
     });
 };
 /**
