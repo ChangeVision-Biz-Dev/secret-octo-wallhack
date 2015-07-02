@@ -3,7 +3,7 @@
  * リスナー。
  * @constructor
  */
-var ChangeListener = function () {
+function ChangeListener () {
 };
 ChangeListener.prototype.change = function (arg) {
     console.log('ChangeListener::update, arg:' + arg);
@@ -13,7 +13,7 @@ ChangeListener.prototype.change = function (arg) {
  * 購読可能な型。
  * @constructor
  */
-var Observable = function () {
+function Observable () {
     /**
      * 登録されたリスナー。
      * @type {Array}

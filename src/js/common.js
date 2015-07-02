@@ -113,6 +113,34 @@
     }
 
     /**
+     * 時計Model
+     */
+    function ClockModel() {
+
+    };
+    ClockModel.prototype = new Observable();
+
+    /**
+     * 時計View
+     */
+    function ClockView() {
+
+    };
+    ClockView.prototype = new ChangeListener();
+
+    /**
+     * 時計Controller
+     */
+    function ClockController() {
+
+    };
+    ClockController.prototype.render = function() {
+      render();
+    }
+
+    var controller;
+
+    /**
      * ロード時の処理。
      */
     window.addEventListener('load', function () {
@@ -120,6 +148,8 @@
         canvas.width = CANVAS_WIDTH;
         canvas.height = CANVAS_HEIGHT;
         ctx = canvas.getContext('2d');
-        render();
+
+        controller = new ClockController();
+        controller.render();
     });
 })();
