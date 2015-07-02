@@ -53,16 +53,22 @@
      * 時計Model
      */
     function ClockModel() {
+      this.now = new Date();
     };
     ClockModel.prototype = new Observable();
-    ClockModel.prototype.now = function () {
-      return new Date();
+    ClockModel.prototype.refresh = function () {
+      this.now = new Date();
+      this.notify({newValue: this.now});
     }
 
     /**
      * 時計View
      */
     function ClockView() {
+      var self = this;
+      this.change = function (event) {
+        self.draw(event.newValue);
+      };
     };
     ClockView.prototype = new ChangeListener();
     ClockView.prototype.draw = function (now) {
@@ -130,9 +136,11 @@
     function ClockController() {
       this.model = new ClockModel();
       this.view = new ClockView();
+
+      this.model.addListener(this.view);
     };
     ClockController.prototype.render = function() {
-      this.view.draw(this.model.now());
+      this.model.refresh();
 
       var self = this;
       requestAnimationFrame(function () {
