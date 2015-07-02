@@ -65,6 +65,9 @@
      * 時計View
      */
     function ClockView() {
+
+      // listenerの実装
+      // changeはObserverより呼ばれることになる関数なのでthisは使えない
       var self = this;
       this.change = function (event) {
         self.draw(event.newValue);
