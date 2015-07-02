@@ -49,69 +49,6 @@
         return degree * (Math.PI / 180);
     }
 
-    function render() {
-        ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-        ctx.fillStyle = 'black';
-
-        ctx.beginPath();
-        ctx.arc(canvasX(0), canvasY(0), 2, 0, Math.PI * 2, true);
-        ctx.fill();
-
-        var now = new Date();
-
-        // ミリも含む秒
-        var second = now.getSeconds() + now.getMilliseconds() / 1000;
-        // 角速度
-        var radPerS = 2 * Math.PI / 60;
-        var radius = second * radPerS;
-        //var sinTheta = Math.sin(radius);
-
-        var methods = {
-            pointX: function (degree, r) {
-                return Math.cos(convertRadian(degree)) * r;
-            },
-            pointY: function (degree, r) {
-                return Math.sin(convertRadian(degree)) * r;
-            },
-            drawLine: function (x, y) {
-                ctx.beginPath();
-                ctx.moveTo(canvasX(0), canvasY(0));
-                ctx.lineTo(canvasX(x), canvasY(y));
-                ctx.stroke();
-            },
-            degreeOfHours: function (d) {
-                return canvasDegree((360 / 60)
-                    * (d.getHours() % 12 * 5 + d.getMinutes() * 5 / 60 ));
-            },
-            degreeOfMinutes: function (d) {
-                return canvasDegree((360 / 60) * d.getMinutes());
-            },
-            degreeOfSeconds: function (d) {
-                return canvasDegree((360 / 60) * d.getSeconds());
-            },
-        };
-
-        with (methods) {
-            var degree = degreeOfHours(now);
-            var r = 50;
-            drawLine(pointX(degree, r), pointY(degree, r));
-        }
-
-        with (methods) {
-            var degree = degreeOfMinutes(now);
-            var r = 70;
-            drawLine(pointX(degree, r), pointY(degree, r));
-        }
-
-        with (methods) {
-            //var degree = degreeOfSeconds(now);
-            var r = 80;
-            drawLine(Math.cos(radius) * r, Math.sin(radius) * r);
-        }
-
-        requestAnimationFrame(render);
-    }
-
     /**
      * 時計Model
      */
@@ -124,21 +61,89 @@
      * 時計View
      */
     function ClockView() {
-
     };
     ClockView.prototype = new ChangeListener();
+    ClockView.prototype.prepare = function () {
+      ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+      ctx.fillStyle = 'black';
+
+      ctx.beginPath();
+      ctx.arc(canvasX(0), canvasY(0), 2, 0, Math.PI * 2, true);
+      ctx.fill();
+    };
+    ClockView.prototype.draw = function () {
+      var now = new Date();
+
+      // ミリも含む秒
+      var second = now.getSeconds() + now.getMilliseconds() / 1000;
+      // 角速度
+      var radPerS = 2 * Math.PI / 60;
+      var radius = second * radPerS;
+      //var sinTheta = Math.sin(radius);
+
+      var methods = {
+          pointX: function (degree, r) {
+              return Math.cos(convertRadian(degree)) * r;
+          },
+          pointY: function (degree, r) {
+              return Math.sin(convertRadian(degree)) * r;
+          },
+          drawLine: function (x, y) {
+              ctx.beginPath();
+              ctx.moveTo(canvasX(0), canvasY(0));
+              ctx.lineTo(canvasX(x), canvasY(y));
+              ctx.stroke();
+          },
+          degreeOfHours: function (d) {
+              return canvasDegree((360 / 60)
+                  * (d.getHours() % 12 * 5 + d.getMinutes() * 5 / 60 ));
+          },
+          degreeOfMinutes: function (d) {
+              return canvasDegree((360 / 60) * d.getMinutes());
+          },
+          degreeOfSeconds: function (d) {
+              return canvasDegree((360 / 60) * d.getSeconds());
+          },
+      };
+
+      with (methods) {
+          var degree = degreeOfHours(now);
+          var r = 50;
+          drawLine(pointX(degree, r), pointY(degree, r));
+      }
+
+      with (methods) {
+          var degree = degreeOfMinutes(now);
+          var r = 70;
+          drawLine(pointX(degree, r), pointY(degree, r));
+      }
+
+      with (methods) {
+          //var degree = degreeOfSeconds(now);
+          var r = 80;
+          drawLine(Math.cos(radius) * r, Math.sin(radius) * r);
+      }
+    };
 
     /**
      * 時計Controller
      */
     function ClockController() {
-
+      this.model = new ClockModel();
+      this.view = new ClockView();
     };
-    ClockController.prototype.render = function() {
-      render();
+    ClockController.prototype.setCanvas = function (ctx) {
+      this.view.setCanvas(ctx);
     }
+    ClockController.prototype.render = function() {
+      this.view.prepare();
+      this.view.draw();
 
-    var controller;
+      var self = this;
+      requestAnimationFrame(function () {
+        self.render();
+      });
+    }
 
     /**
      * ロード時の処理。
@@ -149,7 +154,7 @@
         canvas.height = CANVAS_HEIGHT;
         ctx = canvas.getContext('2d');
 
-        controller = new ClockController();
+        var controller = new ClockController();
         controller.render();
     });
 })();
