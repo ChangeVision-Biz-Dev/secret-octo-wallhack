@@ -53,9 +53,11 @@
      * 時計Model
      */
     function ClockModel() {
-
     };
     ClockModel.prototype = new Observable();
+    ClockModel.prototype.now = function () {
+      return new Date();
+    }
 
     /**
      * 時計View
@@ -63,16 +65,13 @@
     function ClockView() {
     };
     ClockView.prototype = new ChangeListener();
-    ClockView.prototype.prepare = function () {
+    ClockView.prototype.draw = function (now) {
       ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
       ctx.fillStyle = 'black';
 
       ctx.beginPath();
       ctx.arc(canvasX(0), canvasY(0), 2, 0, Math.PI * 2, true);
       ctx.fill();
-    };
-    ClockView.prototype.draw = function () {
-      var now = new Date();
 
       // ミリも含む秒
       var second = now.getSeconds() + now.getMilliseconds() / 1000;
@@ -133,8 +132,7 @@
       this.view = new ClockView();
     };
     ClockController.prototype.render = function() {
-      this.view.prepare();
-      this.view.draw();
+      this.view.draw(this.model.now());
 
       var self = this;
       requestAnimationFrame(function () {
