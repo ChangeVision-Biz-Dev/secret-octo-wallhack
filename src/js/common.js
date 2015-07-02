@@ -132,9 +132,6 @@
       this.model = new ClockModel();
       this.view = new ClockView();
     };
-    ClockController.prototype.setCanvas = function (ctx) {
-      this.view.setCanvas(ctx);
-    }
     ClockController.prototype.render = function() {
       this.view.prepare();
       this.view.draw();
