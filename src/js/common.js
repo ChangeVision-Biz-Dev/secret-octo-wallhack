@@ -59,7 +59,17 @@
     ClockModel.prototype.refresh = function () {
       this.now = new Date();
       this.notify({newValue: this.now});
-    }
+    };
+    ClockModel.prototype.start = function () {
+      this._tick();
+    };
+    ClockModel.prototype._tick = function () {
+      this.refresh();
+      var self = this;
+      requestAnimationFrame(function () {
+        self._tick();
+      });
+    };
 
     /**
      * 時計View
@@ -142,13 +152,8 @@
 
       this.model.addListener(this.view);
     };
-    ClockController.prototype.render = function() {
-      this.model.refresh();
-
-      var self = this;
-      requestAnimationFrame(function () {
-        self.render();
-      });
+    ClockController.prototype.start = function() {
+      this.model.start();
     }
 
     /**
@@ -161,6 +166,6 @@
         ctx = canvas.getContext('2d');
 
         var controller = new ClockController();
-        controller.render();
+        controller.start();
     });
 })();
