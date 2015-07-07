@@ -53,26 +53,44 @@
      * 時計Model
      */
     function ClockModel() {
-
+      this.now = new Date();
     };
     ClockModel.prototype = new Observable();
+    ClockModel.prototype.refresh = function () {
+      this.now = new Date();
+      this.notify({newValue: this.now});
+    };
+    ClockModel.prototype.start = function () {
+      this._tick();
+    };
+    ClockModel.prototype._tick = function () {
+      this.refresh();
+      var self = this;
+      requestAnimationFrame(function () {
+        self._tick();
+      });
+    };
 
     /**
      * 時計View
      */
     function ClockView() {
+
+      // listenerの実装
+      // changeはObserverより呼ばれることになる関数なのでthisは使えない
+      var self = this;
+      this.change = function (event) {
+        self.draw(event.newValue);
+      };
     };
     ClockView.prototype = new ChangeListener();
-    ClockView.prototype.prepare = function () {
+    ClockView.prototype.draw = function (now) {
       ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
       ctx.fillStyle = 'black';
 
       ctx.beginPath();
       ctx.arc(canvasX(0), canvasY(0), 2, 0, Math.PI * 2, true);
       ctx.fill();
-    };
-    ClockView.prototype.draw = function () {
-      var now = new Date();
 
       // ミリも含む秒
       var second = now.getSeconds() + now.getMilliseconds() / 1000;
@@ -131,15 +149,11 @@
     function ClockController() {
       this.model = new ClockModel();
       this.view = new ClockView();
-    };
-    ClockController.prototype.render = function() {
-      this.view.prepare();
-      this.view.draw();
 
-      var self = this;
-      requestAnimationFrame(function () {
-        self.render();
-      });
+      this.model.addListener(this.view);
+    };
+    ClockController.prototype.start = function() {
+      this.model.start();
     }
 
     /**
@@ -152,6 +166,6 @@
         ctx = canvas.getContext('2d');
 
         var controller = new ClockController();
-        controller.render();
+        controller.start();
     });
 })();
