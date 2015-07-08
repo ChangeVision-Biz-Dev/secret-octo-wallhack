@@ -54,11 +54,15 @@
      */
     function ClockModel() {
       this.now = new Date();
+      this.hands = {};
+      this.hands[ClockHandType.hour] = new ClockHand(ClockHandType.hour, 50);
+      this.hands[ClockHandType.miniute] = new ClockHand(ClockHandType.miniute, 70);
+      this.hands[ClockHandType.second] = new ClockHand(ClockHandType.second, 80);
     };
     ClockModel.prototype = new Observable();
     ClockModel.prototype.refresh = function () {
       this.now = new Date();
-      this.notify({newValue: this.now});
+      this.notify({newValue: this});
     };
     ClockModel.prototype.start = function () {
       this._tick();
@@ -70,6 +74,23 @@
         self._tick();
       });
     };
+
+    /**
+     * 時計の針
+     */
+    function ClockHand(handType, length) {
+      this.handType = handType;
+      this.length = length;
+    }
+
+    /**
+     * 時計の針のタイプ
+     */
+    var ClockHandType = {
+      hour: 1,
+      miniute: 2,
+      second: 3
+    }
 
     /**
      * 時計View
@@ -84,7 +105,9 @@
       };
     };
     ClockView.prototype = new ChangeListener();
-    ClockView.prototype.draw = function (now) {
+    ClockView.prototype.draw = function (model) {
+      var now = model.now;
+
       ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
       ctx.fillStyle = 'black';
 
@@ -126,19 +149,19 @@
 
       with (methods) {
           var degree = degreeOfHours(now);
-          var r = 50;
+          var r = model.hands[ClockHandType.hour].length;
           drawLine(pointX(degree, r), pointY(degree, r));
       }
 
       with (methods) {
           var degree = degreeOfMinutes(now);
-          var r = 70;
+          var r = model.hands[ClockHandType.miniute].length;
           drawLine(pointX(degree, r), pointY(degree, r));
       }
 
       with (methods) {
           //var degree = degreeOfSeconds(now);
-          var r = 80;
+          var r = model.hands[ClockHandType.second].length;
           drawLine(Math.cos(radius) * r, Math.sin(radius) * r);
       }
     };
