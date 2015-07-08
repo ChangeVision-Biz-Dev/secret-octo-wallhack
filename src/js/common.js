@@ -115,19 +115,27 @@
       ctx.arc(canvasX(0), canvasY(0), 2, 0, Math.PI * 2, true);
       ctx.fill();
 
-      // ミリも含む秒
-      var second = now.getSeconds() + now.getMilliseconds() / 1000;
-      // 角速度
-      var radPerS = 2 * Math.PI / 60;
-      var radius = second * radPerS;
-      //var sinTheta = Math.sin(radius);
-
       var methods = {
-          pointX: function (degree, r) {
-              return Math.cos(convertRadian(degree)) * r;
+          radiusOfHour: function(now) {
+            // 分も含む時間
+            var hour = now.getHours() + now.getMinutes() / 60;
+            // 角速度
+            var radPer = 2 * Math.PI / 12;
+            return hour * radPer;
           },
-          pointY: function (degree, r) {
-              return Math.sin(convertRadian(degree)) * r;
+          radiusOfMiniute: function(now) {
+            // 秒も含む分
+            var miniute = now.getMinutes() + now.getSeconds() / 60;
+            // 角速度
+            var radPer = 2 * Math.PI / 60;
+            return miniute * radPer;
+          },
+          radiusOfSecond: function(now) {
+            // ミリも含む秒
+            var second = now.getSeconds() + now.getMilliseconds() / 1000;
+            // 角速度
+            var radPer = 2 * Math.PI / 60;
+            return second * radPer;
           },
           drawLine: function (x, y) {
               ctx.beginPath();
@@ -135,34 +143,25 @@
               ctx.lineTo(canvasX(x), canvasY(y));
               ctx.stroke();
           },
-          degreeOfHours: function (d) {
-              return canvasDegree((360 / 60)
-                  * (d.getHours() % 12 * 5 + d.getMinutes() * 5 / 60 ));
-          },
-          degreeOfMinutes: function (d) {
-              return canvasDegree((360 / 60) * d.getMinutes());
-          },
-          degreeOfSeconds: function (d) {
-              return canvasDegree((360 / 60) * d.getSeconds());
-          },
       };
 
       with (methods) {
-          var degree = degreeOfHours(now);
-          var r = model.hands[ClockHandType.hour].length;
-          drawLine(pointX(degree, r), pointY(degree, r));
+        var radius = radiusOfHour(now);
+        var r = model.hands[ClockHandType.hour].length;
+        drawLine(Math.sin(radius) * r, -1 * Math.cos(radius) * r);
       }
 
       with (methods) {
-          var degree = degreeOfMinutes(now);
-          var r = model.hands[ClockHandType.miniute].length;
-          drawLine(pointX(degree, r), pointY(degree, r));
+        var radius = radiusOfMiniute(now);
+        var r = model.hands[ClockHandType.miniute].length;
+        drawLine(Math.sin(radius) * r, -1 * Math.cos(radius) * r);
       }
 
       with (methods) {
           //var degree = degreeOfSeconds(now);
+          var radius = radiusOfSecond(now);
           var r = model.hands[ClockHandType.second].length;
-          drawLine(Math.cos(radius) * r, Math.sin(radius) * r);
+          drawLine(Math.sin(radius) * r, -1 * Math.cos(radius) * r);
       }
     };
 
