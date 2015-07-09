@@ -32,24 +32,6 @@
     }
 
     /**
-     * 上を0度と計算する。
-     * @param degree
-     * @returns {number}
-     */
-    function canvasDegree(degree) {
-        return degree - 90;
-    }
-
-    /**
-     * 度からθへ変換する。
-     * @param degree
-     * @returns {number}
-     */
-    function convertRadian(degree) {
-        return degree * (Math.PI / 180);
-    }
-
-    /**
      * 時計Model
      */
     function ClockModel() {
