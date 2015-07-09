@@ -55,9 +55,9 @@
     function ClockModel() {
       this.now = new Date();
       this.hands = {};
-      this.hands[ClockHandType.hour] = new ClockHand(ClockHandType.hour, 50);
-      this.hands[ClockHandType.miniute] = new ClockHand(ClockHandType.miniute, 70);
-      this.hands[ClockHandType.second] = new ClockHand(ClockHandType.second, 80);
+      this.hands[ClockHandType.hour] = new ClockHand(50);
+      this.hands[ClockHandType.miniute] = new ClockHand(70);
+      this.hands[ClockHandType.second] = new ClockHand(80);
     };
     ClockModel.prototype = new Observable();
     ClockModel.prototype.refresh = function () {
@@ -74,12 +74,29 @@
         self._tick();
       });
     };
+    ClockModel.prototype.radius = function (handType) {
+      var ret;
+      switch (handType) {
+        case ClockHandType.hour:
+          ret = (this.now.getHours() + this.now.getMinutes() / 60)
+            * (2 * Math.PI / 12)
+          break;
+        case ClockHandType.miniute:
+          ret = (this.now.getMinutes() + this.now.getSeconds() / 60)
+            * (2 * Math.PI / 60)
+          break;
+        case ClockHandType.second:
+          ret = (this.now.getSeconds() + this.now.getMilliseconds() / 1000)
+            * (2 * Math.PI / 60)
+          break;
+      }
+      return ret;
+    };
 
     /**
      * 時計の針
      */
-    function ClockHand(handType, length) {
-      this.handType = handType;
+    function ClockHand(length) {
       this.length = length;
     }
 
@@ -106,8 +123,6 @@
     };
     ClockView.prototype = new ChangeListener();
     ClockView.prototype.draw = function (model) {
-      var now = model.now;
-
       ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
       ctx.fillStyle = 'black';
 
@@ -115,54 +130,21 @@
       ctx.arc(canvasX(0), canvasY(0), 2, 0, Math.PI * 2, true);
       ctx.fill();
 
-      var methods = {
-          radiusOfHour: function(now) {
-            // 分も含む時間
-            var hour = now.getHours() + now.getMinutes() / 60;
-            // 角速度
-            var radPer = 2 * Math.PI / 12;
-            return hour * radPer;
-          },
-          radiusOfMiniute: function(now) {
-            // 秒も含む分
-            var miniute = now.getMinutes() + now.getSeconds() / 60;
-            // 角速度
-            var radPer = 2 * Math.PI / 60;
-            return miniute * radPer;
-          },
-          radiusOfSecond: function(now) {
-            // ミリも含む秒
-            var second = now.getSeconds() + now.getMilliseconds() / 1000;
-            // 角速度
-            var radPer = 2 * Math.PI / 60;
-            return second * radPer;
-          },
-          drawLine: function (x, y) {
-              ctx.beginPath();
-              ctx.moveTo(canvasX(0), canvasY(0));
-              ctx.lineTo(canvasX(x), canvasY(y));
-              ctx.stroke();
-          },
+      var drawLine = function (x, y) {
+        ctx.beginPath();
+        ctx.moveTo(canvasX(0), canvasY(0));
+        ctx.lineTo(canvasX(x), canvasY(y));
+        ctx.stroke();
       };
 
-      with (methods) {
-        var radius = radiusOfHour(now);
-        var r = model.hands[ClockHandType.hour].length;
-        drawLine(Math.sin(radius) * r, -1 * Math.cos(radius) * r);
-      }
-
-      with (methods) {
-        var radius = radiusOfMiniute(now);
-        var r = model.hands[ClockHandType.miniute].length;
-        drawLine(Math.sin(radius) * r, -1 * Math.cos(radius) * r);
-      }
-
-      with (methods) {
-          //var degree = degreeOfSeconds(now);
-          var radius = radiusOfSecond(now);
-          var r = model.hands[ClockHandType.second].length;
-          drawLine(Math.sin(radius) * r, -1 * Math.cos(radius) * r);
-      }
+      [ClockHandType.hour, ClockHandType.miniute, ClockHandType.second]
+        .map(function (handType) {
+          return {radius: model.radius(handType), r: model.hands[handType].length};
+        })
+        .map(function (d) {
+          return {x: (Math.sin(d.radius) * d.r), y: (-1 * Math.cos(d.radius) * d.r)};
+        })
+        .map(function (p) { drawLine(p.x, p.y); });
     };
 
     /**
