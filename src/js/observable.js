@@ -26,7 +26,7 @@ function Observable () {
  */
 Observable.prototype.addListener = function (listener) {
     if (listener instanceof ChangeListener) {
-        this.listeners.push(listener.change);
+        this.listeners.push(listener.change.bind(listener));
     } else {
         console.error('invalid object. implement "Listener. : "' + listener)
     }

@@ -95,15 +95,11 @@
      * 時計View
      */
     function ClockView() {
-
-      // listenerの実装
-      // changeはObserverより呼ばれることになる関数なのでthisは使えない
-      var self = this;
-      this.change = function (event) {
-        self.draw(event.newValue);
-      };
     };
     ClockView.prototype = new ChangeListener();
+    ClockView.prototype.change = function (event) {
+      this.draw(event.newValue);
+    }
     ClockView.prototype.draw = function (model) {
       ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
       ctx.fillStyle = 'black';
