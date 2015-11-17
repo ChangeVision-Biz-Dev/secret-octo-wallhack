@@ -45,7 +45,7 @@ gulp.task('js', ['concat'], function () {
 });
 // ファイルコピー
 gulp.task('copy', ['js'], function () {
-    return gulp.src([SRC_DIR + '**/*.html', SRC_DIR + 'css/**'], {base: SRC_DIR})
+    return gulp.src([SRC_DIR + '**/*.html', SRC_DIR + 'css/**', SRC_DIR + '**/*.json'], {base: SRC_DIR})
         .pipe(plumber())
         .pipe(gulp.dest(DEST_DIR))
         ;
@@ -73,5 +73,5 @@ gulp.task('server', ['copy-js'], function () {
 // defaultのタスク。
 gulp.task('default', ['server'], function () {
     // ファイル監視
-    gulp.watch([SRC_DIR + 'js/**/*.js', SRC_DIR + '**/*.html'], ['copy-js']);
+    gulp.watch([SRC_DIR + 'js/**/*.js', SRC_DIR + '**/*.html', SRC_DIR + '**/*.json'], ['copy-js']);
 });
